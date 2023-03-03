@@ -7,8 +7,6 @@ const skills = [
   { skill: 'UNITY', percentage: 80},
   { skill: 'C#', percentage: 50},
   { skill: 'HTML', percentage: 90 },
-  { skill: 'HTML', percentage: 90 },
-  { skill: 'HTML', percentage: 90 },
   { skill: 'CSS', percentage: 80 },
   { skill: 'JavaScript', percentage: 70 },
   { skill: 'React', percentage: 60 },
