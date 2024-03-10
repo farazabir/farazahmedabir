@@ -1,23 +1,38 @@
 import React from "react";
-import '../App.css';
-import "bootstrap/dist/css/bootstrap.min.css";
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import PhotoFrame from "./PhotoFrame";
+import '../App.css'; // Keep your custom styles, but ensure they don't conflict with MUI
 
 export default function Header() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <div className="container mt-4">
-      <div className=" align-items-center  mb-">
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4, textAlign: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem' }}>
         <PhotoFrame imageSrc="https://avatars.githubusercontent.com/u/62275863?v=4" altText="My photo" />
       </div>
-      <h1 >Faraz Ahmed Abir</h1>
-      <h5 className="h5 font-weight-light ">
-        I make mobile apps and web applications.
-      </h5>
-      <div className="d-flex justify-content-center align-items-center header-text">
-        <h5 className="h5 font-weight-light">
-          A full stack indie developer with expertise in Flutter and web development. With 1.8 of experience, I build user-friendly and performant cross-platform mobile apps using Flutter and dynamic web applications using HTML, CSS, JavaScript, Node js and popular front-end frameworks like React. I'm comfortable with a wide range of technologies, including database management and API design. Let's build something great together!
-        </h5>
+      <Typography variant="h3" component="h1" gutterBottom>
+        Faraz Ahmed Abir
+      </Typography>
+      <Typography variant="h4" component="h4" sx={{ fontWeight: '500', fontFamily: 'monospace', mt: 3, mb: 2 }} gutterBottom>
+      Crafting robust web and mobile solutions tailored to client needs, leveraging cross-platform development, competitive programming, AI, Docker, and GitHub expertise.
+      </Typography>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Typography variant="h5" sx={{
+          fontWeight: '500',
+          fontFamily: 'monospace',
+          margin: 'auto',
+          lineHeight: '1.5',
+          letterSpacing: 'normal',
+          textAlign: 'justify', 
+        }}>
+         Currently, I'm a full-stack developer at Drag Me, where I leverage my diverse skill set to build robust web and mobile applications. My expertise spans a range of technologies, including Django, Node.js, and Spring Boot for backend development, along with proficiency in creating cross-platform mobile apps using React Native, Kotlin, and Flutter. Beyond application development, I'm passionate about competitive programming, regularly honing my skills on platforms like LeetCode. I also have a keen interest in artificial intelligence, capable of undertaking AI projects with my knowledge of Python. My technical repertoire includes familiarity with Docker, GitHub, and other essential development tools, enabling me to maintain a versatile and forward-thinking approach to technology solutions.
+        </Typography>
       </div>
-    </div>
+    </Container>
   );
 }

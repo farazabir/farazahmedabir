@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 
-const ParticleBackground = () => {
+const ParticleBackground = ({darkMode}) => {
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
     await loadFull(engine);
@@ -20,7 +20,7 @@ const ParticleBackground = () => {
         "autoPlay": true,
         "background": {
           "color": {
-            "value": "#ffffff"
+            "value": "#00000"
           },
           "image": "",
           "position": "",
@@ -80,7 +80,7 @@ const ParticleBackground = () => {
               "duration": 0.4,
               "easing": "ease-out-quad",
               "factor": 1,
-              "maxSpeed": 50,
+              "maxSpeed": 20,
               "speed": 1
             },
             "bounce": {
@@ -125,14 +125,14 @@ const ParticleBackground = () => {
               "duration": 0.4,
               "factor": 100,
               "speed": 1,
-              "maxSpeed": 50,
+              "maxSpeed": 20,
               "easing": "ease-out-quad",
               "divs": {
                 "distance": 200,
                 "duration": 0.4,
                 "factor": 100,
                 "speed": 1,
-                "maxSpeed": 50,
+                "maxSpeed": 20,
                 "easing": "ease-out-quad",
                 "selectors": []
               }
@@ -213,7 +213,7 @@ const ParticleBackground = () => {
             }
           },
           "color": {
-            "value": "#000000",
+            "value": darkMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)",
             "animation": {
               "h": {
                 "count": 0,
@@ -227,7 +227,7 @@ const ParticleBackground = () => {
                 "count": 0,
                 "enable": false,
                 "offset": 0,
-                "speed": 1,
+                "speed": .5,
                 "decay": 0,
                 "sync": true
               },
@@ -270,7 +270,7 @@ const ParticleBackground = () => {
               "acceleration": 9.81,
               "enable": false,
               "inverse": false,
-              "maxSpeed": 50
+              "maxSpeed": 20
             },
             "path": {
               "clamp": true,
@@ -293,7 +293,7 @@ const ParticleBackground = () => {
             },
             "random": false,
             "size": false,
-            "speed": 6,
+            "speed": 3,
             "spin": {
               "acceleration": 0,
               "enable": false
@@ -470,7 +470,7 @@ const ParticleBackground = () => {
             },
             "animation": {
               "enable": true,
-              "speed": 60,
+              "speed": 30,
               "decay": 0,
               "sync": false
             },
