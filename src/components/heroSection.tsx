@@ -24,7 +24,8 @@ export const HeroSection = () => {
   const { theme, setTheme } = useTheme();
 
   const handleDownload = () => {
-    window.open("/resume.pdf", "_blank");
+    const resumePath = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/resume.pdf`;
+    window.open(resumePath, "_blank");
   };
 
   useGSAP(() => {
