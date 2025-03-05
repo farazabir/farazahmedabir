@@ -24,7 +24,7 @@ export const HeroSection = () => {
   const { theme, setTheme } = useTheme();
 
   const handleDownload = () => {
-    const resumePath = `farazahmedabir/resume.pdf`;
+    const resumePath = `/resume.pdf`;
     window.open(resumePath, "_blank");
   };
 
