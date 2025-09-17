@@ -20,7 +20,7 @@ interface Project {
   image: string;
   description: string;
   techused: string;
-  link: string; // Added link property
+  link: string;
 }
 
 const projects: Project[] = [
@@ -94,13 +94,27 @@ export const ProjectsSection = () => {
     cards.forEach((card) => {
       const hoverTl = gsap.timeline({ paused: true });
 
-      hoverTl.to(card, {
-        scale: 1.03,
-        rotationX: -2,
-        rotationY: 2,
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
-        duration: 0.4,
-        ease: "power2.out",
+      // Only apply 3D effects on larger screens
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px)", () => {
+        hoverTl.to(card, {
+          scale: 1.03,
+          rotationX: -2,
+          rotationY: 2,
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
+          duration: 0.4,
+          ease: "power2.out",
+        });
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        hoverTl.to(card, {
+          scale: 1.02,
+          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
+          duration: 0.3,
+          ease: "power2.out",
+        });
       });
 
       const enterHandler = () => hoverTl.play();
@@ -113,20 +127,26 @@ export const ProjectsSection = () => {
       return () => {
         card.removeEventListener("mouseenter", enterHandler);
         card.removeEventListener("mouseleave", leaveHandler);
+        mm.revert();
       };
     });
 
-    gsap.utils.toArray<Element>(".project-image-card").forEach((card) => {
-      gsap.to(card.querySelector("img"), {
-        yPercent: -15,
-        ease: "none",
-        scrollTrigger: {
-          trigger: card,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
+    // Parallax effect only on larger screens
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      gsap.utils.toArray<Element>(".project-image-card").forEach((card) => {
+        gsap.to(card.querySelector("img"), {
+          yPercent: -15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: card,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
       });
     });
 
@@ -141,33 +161,47 @@ export const ProjectsSection = () => {
         },
       });
 
-      tl.from(item, {
-        opacity: 0,
-        y: 50,
-        duration: 1.2,
-        ease: "expo.out",
-      })
-        .from(
-          item.querySelector(".project-image-card"),
-          {
-            rotationY: -25,
-            scale: 0.95,
-            duration: 1.4,
-            ease: "expo.out",
-          },
-          0
-        )
-        .from(
-          item.querySelector(".project-text-card"),
-          {
-            opacity: 0,
-            x: 50,
-            duration: 1,
-            ease: "power3.out",
-          },
-          0.2
-        );
+      // Different animations for mobile vs desktop
+      mm.add("(min-width: 768px)", () => {
+        tl.from(item, {
+          opacity: 0,
+          y: 50,
+          duration: 1.2,
+          ease: "expo.out",
+        })
+          .from(
+            item.querySelector(".project-image-card"),
+            {
+              rotationY: -25,
+              scale: 0.95,
+              duration: 1.4,
+              ease: "expo.out",
+            },
+            0
+          )
+          .from(
+            item.querySelector(".project-text-card"),
+            {
+              opacity: 0,
+              x: 50,
+              duration: 1,
+              ease: "power3.out",
+            },
+            0.2
+          );
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        tl.from(item, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      });
     });
+
+    return () => mm.revert();
   });
 
   // Function to handle card click
@@ -176,84 +210,159 @@ export const ProjectsSection = () => {
   };
 
   return (
-    <section className="projects-section container mx-auto py-16 px-4 relative">
-      {/* Timeline line */}
-      <div className="absolute left-1/2 top-0 h-full w-0.5 bg-gradient-to-b from-transparent via-primary/30 to-transparent -translate-x-1/2 z-0" />
+    <section className="projects-section container mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 relative">
+      {/* Timeline line - hidden on mobile, visible on larger screens */}
+      <div className="hidden md:block absolute left-1/2 top-0 h-full w-0.5 bg-gradient-to-b from-transparent via-primary/30 to-transparent -translate-x-1/2 z-0" />
 
-      <h2 className="mb-12 text-center text-4xl font-bold text-gray-900 dark:text-white">
+      {/* Title */}
+      <h2 className="mb-8 sm:mb-12 text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white px-4">
         Featured <span className="text-primary">Projects</span>
       </h2>
 
-      <div className="space-y-20">
+      <div className="space-y-12 sm:space-y-16 lg:space-y-20">
         {projects.map((project, index) => (
-          <div
-            key={index}
-            className="project-item relative grid md:grid-cols-2 items-center gap-6"
-          >
-            <Card
-              className={`project-card project-image-card w-full h-[450px] overflow-hidden shadow-2xl transition-transform duration-300 cursor-pointer group ${
-                index % 2 === 0 ? "md:order-2" : "md:order-1"
-              }`}
-              onClick={() => handleCardClick(project.link)}
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                />
-                {/* Overlay with link icon */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                    <ExternalLink className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Timeline Number */}
-            <div className="timeline-number absolute left-1/2 -translate-x-1/2 z-10 h-10 w-10 flex items-center justify-center bg-background rounded-full border-2 border-primary/50 shadow-sm">
-              <span className="text-lg font-medium text-primary/80">
+          <div key={index} className="project-item relative">
+            {/* Timeline Number - only visible on desktop */}
+            <div className="timeline-number hidden md:flex absolute left-1/2 -translate-x-1/2 z-10 h-8 w-8 lg:h-10 lg:w-10 items-center justify-center bg-background rounded-full border-2 border-primary/50 shadow-sm">
+              <span className="text-sm lg:text-lg font-medium text-primary/80">
                 {index + 1}
               </span>
             </div>
 
-            {/* Text Card - Swaps sides based on index */}
-            <Card
-              className={`project-card project-text-card w-full h-[450px] shadow-2xl p-6 flex flex-col justify-center cursor-pointer group ${
-                index % 2 === 0 ? "md:order-1" : "md:order-2"
-              }`}
-              onClick={() => handleCardClick(project.link)}
-            >
-              <CardHeader>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent flex items-center gap-2">
-                  {project.title}
-                  <ExternalLink className="w-6 h-6 text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mt-2 text-lg text-gray-600 dark:text-gray-300">
-                  {project.description}
-                </CardDescription>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.techused.split(",").map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary dark:bg-primary/20 hover:scale-105 transition-transform"
-                    >
-                      {tech.trim()}
-                    </span>
-                  ))}
+            {/* Mobile Layout - Stacked */}
+            <div className="md:hidden space-y-4">
+              {/* Image Card */}
+              {project.image && (
+                <Card
+                  className="project-card project-image-card w-full h-48 sm:h-64 overflow-hidden shadow-lg cursor-pointer group"
+                  onClick={() => handleCardClick(project.link)}
+                >
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {/* Overlay with link icon */}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                        <ExternalLink className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {/* Text Card */}
+              <Card
+                className="project-card project-text-card w-full shadow-lg p-4 sm:p-6 cursor-pointer group"
+                onClick={() => handleCardClick(project.link)}
+              >
+                <CardHeader className="p-0 pb-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent flex-1">
+                      {project.title}
+                    </CardTitle>
+                    <ExternalLink className="w-5 h-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0 mt-1" />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <CardDescription className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {project.description}
+                  </CardDescription>
+                  <div className="mt-4 flex flex-wrap gap-1.5 sm:gap-2">
+                    {project.techused.split(",").map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full bg-primary/10 text-primary dark:bg-primary/20"
+                      >
+                        {tech.trim()}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-4 sm:mt-6">
+                    <button className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                      View Project
+                      <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Desktop/Tablet Layout - Side by Side */}
+            <div className="hidden md:grid md:grid-cols-2 items-center gap-6 lg:gap-8">
+              {/* Image Card */}
+              <Card
+                className={`project-card project-image-card w-full h-80 lg:h-[450px] overflow-hidden shadow-2xl transition-transform duration-300 cursor-pointer group ${
+                  index % 2 === 0 ? "md:order-2" : "md:order-1"
+                }`}
+                onClick={() => handleCardClick(project.link)}
+              >
+                <div className="relative w-full h-full">
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center">
+                      <div className="text-center">
+                        <ExternalLink className="w-16 h-16 text-primary/40 mx-auto mb-4" />
+                        <p className="text-primary/60 text-lg font-medium">
+                          View Project
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {/* Overlay with link icon */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
+                      <ExternalLink className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-6">
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0  duration-300">
-                    View Project
-                    <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
+              </Card>
+
+              {/* Text Card */}
+              <Card
+                className={`project-card project-text-card w-full h-80 lg:h-[450px] shadow-2xl p-4 lg:p-6 flex flex-col justify-center cursor-pointer group ${
+                  index % 2 === 0 ? "md:order-1" : "md:order-2"
+                }`}
+                onClick={() => handleCardClick(project.link)}
+              >
+                <CardHeader className="p-0 pb-4">
+                  <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent flex items-start gap-2">
+                    <span className="flex-1">{project.title}</span>
+                    <ExternalLink className="w-5 lg:w-6 h-5 lg:h-6 text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0 mt-1" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 flex-1 flex flex-col">
+                  <CardDescription className="text-base lg:text-lg text-gray-600 dark:text-gray-300 leading-relaxed flex-1">
+                    {project.description}
+                  </CardDescription>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.techused.split(",").map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-2 lg:px-3 py-1 text-xs lg:text-sm rounded-full bg-primary/10 text-primary dark:bg-primary/20 hover:scale-105 transition-transform"
+                      >
+                        {tech.trim()}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-4 lg:mt-6">
+                    <button className="inline-flex items-center gap-2 px-3 lg:px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
+                      View Project
+                      <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         ))}
       </div>
