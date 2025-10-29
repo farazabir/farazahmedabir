@@ -18,13 +18,15 @@ export default function Home() {
 
   useGSAP(
     () => {
-      const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+      const isMobile =
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 768px)").matches;
 
       // Section reveal animations
       const sections = gsap.utils.toArray<Element>([
         ".projects-section",
         ".skills-section",
-        ".contact-section"
+        ".contact-section",
       ]);
 
       sections.forEach((section) => {
@@ -72,16 +74,15 @@ export default function Home() {
   return (
     <main ref={container} className="relative overflow-hidden bg-background">
       {/* Mouse Follower - Desktop Only */}
-      {typeof window !== 'undefined' && !window.matchMedia("(max-width: 768px)").matches && (
-        <MouseFollower />
-      )}
+      {typeof window !== "undefined" &&
+        !window.matchMedia("(max-width: 768px)").matches && <MouseFollower />}
 
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-muted/20 z-50">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500 origin-left"
           style={{
-            transform: 'scaleX(0)',
+            transform: "scaleX(0)",
           }}
           ref={(el) => {
             if (el) {
@@ -91,8 +92,8 @@ export default function Home() {
                 scrollTrigger: {
                   start: "top top",
                   end: "max",
-                  scrub: 0.3
-                }
+                  scrub: 0.3,
+                },
               });
             }
           }}
@@ -105,13 +106,19 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="projects-section min-h-screen w-full py-20 relative">
+      <section
+        id="projects"
+        className="projects-section min-h-screen w-full py-20 relative"
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background -z-10" />
         <ProjectsSection />
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="skills-section min-h-screen w-full py-20 relative">
+      <section
+        id="skills"
+        className="skills-section min-h-screen w-full py-20 relative"
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background -z-10" />
         <SkillsSection />
       </section>

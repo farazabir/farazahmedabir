@@ -145,14 +145,14 @@ export const ContactSection = () => {
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="contact-title text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Let's Build Something
+              Let&apos;s Build Something
             </span>
             <br />
             <span className="text-foreground">Amazing Together</span>
           </h2>
           <p className="contact-subtitle text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? I'd love to hear from
-            you!
+            Have a project in mind or want to collaborate? I&apos;d love to hear
+            from you!
           </p>
         </div>
 
