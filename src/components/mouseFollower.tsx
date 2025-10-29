@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 const MouseFollower = () => {
   const followerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
   const [cursorText, setCursorText] = useState("");
 
   useGSAP(() => {
@@ -52,7 +51,6 @@ const MouseFollower = () => {
 
     const handleMouseEnter = (e: Event) => {
       const target = e.target as HTMLElement;
-      setIsHovering(true);
 
       // Check for custom cursor text
       const text = target.getAttribute("data-cursor-text");
@@ -73,7 +71,6 @@ const MouseFollower = () => {
     };
 
     const handleMouseLeave = () => {
-      setIsHovering(false);
       setCursorText("");
 
       gsap.to(followerRef.current, {
