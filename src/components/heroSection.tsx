@@ -245,7 +245,11 @@ export const HeroSection = () => {
 
           {/* Description */}
           <p className="hero-desc text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Building scalable web and mobile applications that solve real-world problems. Currently developing QuizNest, an AI-powered EdTech platform for exam preparation. Leveraging AI and machine learning to create impactful SaaS solutions with a focus on efficiency and innovation.{" "}
+            Building scalable web and mobile applications that solve real-world
+            problems. Currently developing QuizNest, an AI-powered EdTech
+            platform for exam preparation. Leveraging AI and machine learning to
+            create impactful SaaS solutions with a focus on efficiency and
+            innovation.{" "}
             <span className="text-primary font-semibold">efficiency</span> and
             <span className="text-primary font-semibold"> innovation</span>.
           </p>
@@ -274,7 +278,7 @@ export const HeroSection = () => {
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Let's Talk
+              Let&apos;s Talk
             </Button>
           </div>
 
