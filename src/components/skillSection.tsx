@@ -1,7 +1,7 @@
 "use client";
 
+import { JSX, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { JSX } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,8 @@ import {
   Video,
   Flame,
   FileImage,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -44,94 +46,192 @@ const skillIcons: { [key: string]: JSX.Element } = {
   Flutter: <Smartphone className="w-4 h-4" />,
   "Next.js": <Network className="w-4 h-4" />,
   "React Native": <Smartphone className="w-4 h-4" />,
-  "Google Calender": <Calendar className="w-4 h-4" />,
+  "Google Calendar": <Calendar className="w-4 h-4" />,
   "Google Meet": <Video className="w-4 h-4" />,
   Pytorch: <Flame className="w-4 h-4" />,
 };
 
 export const SkillsSection = () => {
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".skills-section",
-        start: "top center",
-        end: "bottom bottom",
-        scrub: 1,
-      },
-    });
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-    tl.from(".skill-item", {
-      opacity: 0,
-      y: 40,
-      stagger: { amount: 0.8, from: "random" },
-      ease: "power4.out",
-    }).from(
-      ".experience-item",
-      {
-        opacity: 0,
-        x: -100,
-        stagger: 0.9,
-        ease: "elastic.out(1, 0.5)",
-        onComplete: () => {
-          gsap.to(".timeline-connector", {
-            scaleY: 1,
-            duration: 1.5,
-            ease: "power4.out",
-          });
+  useGSAP(
+    () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          end: "bottom bottom",
+          toggleActions: "play none none reverse",
         },
-      },
-      "-=0.5"
-    );
-  });
+      });
+
+      tl.from(".skills-title", {
+        opacity: 0,
+        y: 50,
+        scale: 0.9,
+        duration: 0.8,
+        ease: "back.out(1.4)",
+      }).from(
+        ".skills-subtitle",
+        {
+          opacity: 0,
+          y: 30,
+          duration: 0.6,
+          ease: "power2.out",
+        },
+        "-=0.4"
+      );
+
+      gsap.utils.toArray<HTMLElement>(".skill-item").forEach((item, index) => {
+        gsap.from(item, {
+          opacity: 0,
+          y: 40,
+          rotationX: -15,
+          scale: 0.8,
+          duration: 0.6,
+          ease: "back.out(1.4)",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            toggleActions: "play none none reverse",
+          },
+          delay: (index % 7) * 0.05,
+        });
+
+        item.addEventListener("mouseenter", () => {
+          gsap.to(item, {
+            scale: 1.1,
+            y: -5,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+
+        item.addEventListener("mouseleave", () => {
+          gsap.to(item, { scale: 1, y: 0, duration: 0.3, ease: "power2.out" });
+        });
+      });
+
+      const timelineItems = gsap.utils.toArray<HTMLElement>(".experience-item");
+
+      timelineItems.forEach((item) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        tl.from(item, {
+          opacity: 0,
+          x: -80,
+          duration: 0.8,
+          ease: "power3.out",
+        })
+          .from(
+            item.querySelector(".timeline-dot"),
+            {
+              scale: 0,
+              duration: 0.4,
+              ease: "back.out(2)",
+            },
+            "-=0.4"
+          )
+          .from(
+            item.querySelectorAll(".tech-badge"),
+            {
+              opacity: 0,
+              scale: 0.5,
+              stagger: 0.05,
+              duration: 0.3,
+              ease: "back.out(1.5)",
+            },
+            "-=0.2"
+          );
+      });
+
+      gsap.to(".timeline-line", {
+        scaleY: 1,
+        duration: 1.5,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: ".experience-container",
+          start: "top 70%",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+    },
+    { scope: sectionRef }
+  );
 
   const experiences = [
     {
-      work: "Sotware Engineer",
-      des: "Currently working as a Full Stack Developer, focusing on end-to-end application development including both front-end and back-end technologies.",
+      work: "Software Engineer",
+      des: "Full Stack Developer focusing on end-to-end application development with modern technologies",
       duration: "2023 - Present",
-      tech: ["Django", "React Native", "AWS", "Docker", "Node js", "Spring"],
+      tech: [
+        "Django",
+        "React Native",
+        "AWS",
+        "Docker",
+        "Node js",
+        "Spring Boot",
+      ],
     },
     {
       work: "Mobile App Development",
-      des: "Developed Various Mobile apps",
+      des: "Created cross-platform mobile applications with seamless user experiences",
       duration: "2022 - 2023",
-      tech: ["Flutter", "React Native", "Dart", "Ts", "Tailwind"],
+      tech: ["Flutter", "React Native", "Dart", "TypeScript", "Tailwind"],
     },
     {
       work: "Full Stack Web Development",
-      des: "Started Learning Web Development",
+      des: "Mastered modern web technologies and full-stack development practices",
       duration: "2021 - 2022",
-      tech: ["HTML", "JS", "Node", "sql", "mongodb"],
+      tech: ["HTML", "JavaScript", "Node.js", "SQL", "MongoDB"],
     },
     {
       work: "Unity Game Development",
-      des: "Developed games using Unity engine and C#",
+      des: "Built interactive games and simulations using Unity engine",
       duration: "2020 - 2021",
       tech: ["C#", "Unity"],
     },
     {
-      work: "First Line Of Code",
-      des: "In 2020, I got my first laptop.",
+      work: "First Line of Code",
+      des: "Started the coding journey with C programming fundamentals",
       duration: "2020",
       tech: ["C"],
     },
   ];
 
   return (
-    <section className="skills-section container mx-auto py-20 px-4 ">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="mb-16 text-center text-4xl font-bold flex items-center justify-center gap-3">
-          <Rocket className="w-8 h-8 text-primary" />
-          Skills & Experience
-          <Calendar className="w-8 h-8 text-primary" />
-        </h2>
+    <section
+      ref={sectionRef}
+      className="skills-section container mx-auto py-20 px-4"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="text-center mb-16">
+          <h2 className="skills-title text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Skills & Experience
+            </span>
+          </h2>
+          <p className="skills-subtitle text-lg text-muted-foreground max-w-2xl mx-auto">
+            A journey of continuous learning and building impactful solutions
+          </p>
+        </div>
 
-        <div className="grid gap-12 md:grid-cols-2">
-          <div>
-            <h3 className="mb-8 text-2xl font-semibold flex items-center gap-2">
-              <Terminal className="w-6 h-6 text-primary" />
-              Familiar With
-            </h3>
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div className="space-y-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-semibold">Tech Stack</h3>
+            </div>
+
             <div className="flex flex-wrap gap-3">
               {[
                 "Java",
@@ -158,53 +258,88 @@ export const SkillsSection = () => {
               ].map((skill) => (
                 <Button
                   variant="outline"
-                  className="skill-item flex items-center gap-2"
                   key={skill}
+                  className="skill-item flex items-center gap-2 px-4 py-2 rounded-full border-2 hover:border-primary hover:bg-primary/10 transition-all duration-300 backdrop-blur-sm bg-background/50 group"
                 >
-                  {skillIcons[skill] || <Code2 className="w-4 h-4" />}
-                  {skill}
+                  <span className="group-hover:rotate-12 transition-transform duration-300">
+                    {skillIcons[skill] || <Code2 className="w-4 h-4" />}
+                  </span>
+                  <span className="font-medium">{skill}</span>
                 </Button>
               ))}
             </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-8">
+              <div className="skill-item p-6 rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20 backdrop-blur-sm">
+                <div className="text-3xl font-bold text-primary mb-2">5+</div>
+                <div className="text-sm text-muted-foreground">
+                  Years Coding
+                </div>
+              </div>
+              <div className="skill-item p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 backdrop-blur-sm">
+                <div className="text-3xl font-bold text-purple-500 mb-2">
+                  20+
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Technologies
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Experience Column */}
-          <div className="relative">
-            <div className="absolute left-6 top-0 h-full w-px bg-border">
-              <div className="timeline-connector absolute top-0 h-0 w-full origin-top scale-y-0 bg-primary transition-all" />
+          <div className="experience-container relative">
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border overflow-hidden">
+              <div className="timeline-line absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary via-purple-500 to-pink-500 origin-top scale-y-0" />
             </div>
 
-            <h3 className="mb-8 text-2xl font-semibold ml-10 flex items-center gap-2">
-              <Briefcase className="w-6 h-6 text-primary" />
-              Journey
-            </h3>
+            <div className="flex items-center gap-3 mb-8 ml-14">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <Briefcase className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-semibold">Journey</h3>
+            </div>
 
             <div className="space-y-8">
               {experiences.map((exp, index) => (
                 <div
                   key={index}
-                  className="experience-item relative pl-12 group"
+                  className="experience-item relative pl-16 group"
                 >
-                  <div className="absolute left-0 top-2 h-4 w-4 rounded-full bg-primary flex items-center justify-center">
-                    <div className="w-2 h-2 bg-background rounded-full" />
+                  <div className="timeline-dot absolute left-4 top-2 z-10">
+                    <div className="relative">
+                      <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                        <div className="w-2 h-2 bg-background rounded-full" />
+                      </div>
+                      <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+                    </div>
                   </div>
-                  <h4 className="text-lg font-medium flex items-center gap-2">
-                    {exp.work}
-                  </h4>
-                  <p className="text-muted-foreground">{exp.des}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {exp.duration}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {exp.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-md bg-muted px-2 py-1 text-sm flex items-center gap-1"
-                      >
-                        {skillIcons[tech] || <Code2 className="w-3 h-3" />}
-                        {tech}
-                      </span>
-                    ))}
+
+                  <div className="p-6 rounded-xl bg-card border-2 border-border hover:border-primary/50 transition-all duration-300 backdrop-blur-sm hover:shadow-lg group-hover:translate-x-2">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <h4 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
+                        {exp.work}
+                      </h4>
+                      <Zap className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+
+                    <p className="text-muted-foreground mb-2 text-sm sm:text-base">
+                      {exp.des}
+                    </p>
+                    <p className="text-sm text-primary font-medium mb-3">
+                      {exp.duration}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="tech-badge rounded-full bg-primary/10 px-3 py-1 text-xs sm:text-sm flex items-center gap-1 border border-primary/20 hover:bg-primary/20 transition-colors"
+                        >
+                          {skillIcons[tech] || <Code2 className="w-3 h-3" />}
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}

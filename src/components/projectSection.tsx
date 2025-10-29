@@ -40,7 +40,7 @@ const projects: Project[] = [
     description:
       "A platform built for AI-powered admission and job exam preparation. Developed with a modern stack, it features interactive quizzes, analytical reports, and AI-generated explanations to guide learners.",
     techused: "Next js, Django, Docker, postgreSQL",
-    link: "https://quiznest.farazinc.top/",
+    link: "https://quiznest.farazinc.org/",
   },
   {
     title: "Linguavid",
