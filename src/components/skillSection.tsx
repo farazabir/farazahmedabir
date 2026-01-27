@@ -1,120 +1,217 @@
 "use client";
 
-import { JSX, useRef } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Button } from "@/components/ui/button";
-import {
-  Briefcase,
-  Code2,
-  Cloud,
-  Database,
-  GitFork,
-  Terminal,
-  Network,
-  Package,
-  Server,
-  Smartphone,
-  Rocket,
-  Calendar,
-  Video,
-  Flame,
-  FileImage,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const skillIcons: { [key: string]: JSX.Element } = {
-  Java: <Code2 className="w-4 h-4" />,
-  "Spring Boot": <Server className="w-4 h-4" />,
-  "Node js": <Network className="w-4 h-4" />,
-  Javascript: <Code2 className="w-4 h-4" />,
-  Python: <Terminal className="w-4 h-4" />,
-  Django: <Rocket className="w-4 h-4" />,
-  Jira: <Rocket className="w-4 h-4" />,
-  "Image processing": <FileImage className="w-4 h-4" />,
-  Git: <GitFork className="w-4 h-4" />,
-  Docker: <Package className="w-4 h-4" />,
-  Mysql: <Database className="w-4 h-4" />,
-  Postgresql: <Database className="w-4 h-4" />,
-  Mongodb: <Database className="w-4 h-4" />,
-  Aws: <Cloud className="w-4 h-4" />,
-  React: <Smartphone className="w-4 h-4" />,
-  Flutter: <Smartphone className="w-4 h-4" />,
-  "Next.js": <Network className="w-4 h-4" />,
-  "React Native": <Smartphone className="w-4 h-4" />,
-  "Google Calendar": <Calendar className="w-4 h-4" />,
-  "Google Meet": <Video className="w-4 h-4" />,
-  Pytorch: <Flame className="w-4 h-4" />,
-};
+const skills = [
+  { name: "Java", category: "Backend" },
+  { name: "Spring Boot", category: "Backend" },
+  { name: "Node.js", category: "Backend" },
+  { name: "Python", category: "Backend" },
+  { name: "Django", category: "Backend" },
+  { name: "TypeScript", category: "Language" },
+  { name: "JavaScript", category: "Language" },
+  { name: "React", category: "Frontend" },
+  { name: "Next.js", category: "Frontend" },
+  { name: "React Native", category: "Mobile" },
+  { name: "Flutter", category: "Mobile" },
+  { name: "PostgreSQL", category: "Database" },
+  { name: "MySQL", category: "Database" },
+  { name: "MongoDB", category: "Database" },
+  { name: "Docker", category: "DevOps" },
+  { name: "AWS", category: "Cloud" },
+  { name: "Git", category: "Tools" },
+  { name: "PyTorch", category: "AI/ML" },
+  { name: "OpenCV", category: "AI/ML" },
+  { name: "RabbitMQ", category: "Backend" },
+];
+
+const experiences = [
+  {
+    role: "Software Engineer",
+    company: "Drag Me",
+    duration: "2023 — Present",
+    description:
+      "Full Stack development with focus on scalable architecture and AI integration.",
+  },
+  {
+    role: "Mobile Developer",
+    company: "Freelance",
+    duration: "2022 — 2023",
+    description:
+      "Cross-platform mobile applications with React Native and Flutter.",
+  },
+  {
+    role: "Full Stack Developer",
+    company: "Self-Employed",
+    duration: "2021 — 2022",
+    description:
+      "Web applications using modern JavaScript frameworks and Node.js.",
+  },
+];
+
+const stats = [
+  { value: "5+", label: "Years Coding" },
+  { value: "20+", label: "Technologies" },
+  { value: "100+", label: "Projects" },
+  { value: "∞", label: "Curiosity" },
+];
 
 export const SkillsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
+      if (prefersReducedMotion) return;
+      // Title reveal animation
+      const titleTl = gsap.timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-          end: "bottom bottom",
+          trigger: ".skills-header",
+          start: "top 80%",
           toggleActions: "play none none reverse",
         },
       });
 
-      tl.from(".skills-title", {
-        opacity: 0,
-        y: 50,
-        scale: 0.9,
-        duration: 0.8,
-        ease: "back.out(1.4)",
-      }).from(
-        ".skills-subtitle",
-        {
-          opacity: 0,
-          y: 30,
-          duration: 0.6,
-          ease: "power2.out",
-        },
-        "-=0.4"
-      );
+      titleTl
+        .from(".skills-title-line", {
+          scaleX: 0,
+          duration: 1,
+          ease: "power3.inOut",
+        })
+        .from(
+          ".skills-title-text",
+          {
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.5",
+        );
 
-      gsap.utils.toArray<HTMLElement>(".skill-item").forEach((item, index) => {
-        gsap.from(item, {
-          opacity: 0,
-          y: 40,
-          rotationX: -15,
-          scale: 0.8,
-          duration: 0.6,
-          ease: "back.out(1.4)",
+      // Stats counter animation
+      gsap.utils.toArray<HTMLElement>(".stat-item").forEach((stat, i) => {
+        const valueEl = stat.querySelector(".stat-value");
+        const labelEl = stat.querySelector(".stat-label");
+
+        const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: item,
-            start: "top 90%",
+            trigger: stat,
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
-          delay: (index % 7) * 0.05,
         });
 
-        item.addEventListener("mouseenter", () => {
-          gsap.to(item, {
+        tl.from(valueEl, {
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          delay: i * 0.1,
+          ease: "power3.out",
+        }).from(
+          labelEl,
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power2.out",
+          },
+          "-=0.4",
+        );
+      });
+
+      // Marquee animation - two directions
+      gsap.to(".skills-marquee-1", {
+        xPercent: -50,
+        ease: "none",
+        duration: 25,
+        repeat: -1,
+      });
+
+      gsap.to(".skills-marquee-2", {
+        xPercent: 50,
+        ease: "none",
+        duration: 30,
+        repeat: -1,
+      });
+
+      // Skills grid stagger animation
+      gsap.from(".skill-tag", {
+        scrollTrigger: {
+          trigger: ".skills-grid",
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+        scale: 0,
+        opacity: 0,
+        stagger: {
+          each: 0.03,
+          from: "random",
+          grid: "auto",
+        },
+        duration: 0.5,
+        ease: "back.out(2)",
+      });
+
+      // Skills grid hover effect
+      gsap.utils.toArray<HTMLElement>(".skill-tag").forEach((tag) => {
+        tag.addEventListener("mouseenter", () => {
+          gsap.to(tag, {
             scale: 1.1,
-            y: -5,
             duration: 0.3,
             ease: "power2.out",
           });
         });
 
-        item.addEventListener("mouseleave", () => {
-          gsap.to(item, { scale: 1, y: 0, duration: 0.3, ease: "power2.out" });
+        tag.addEventListener("mouseleave", () => {
+          gsap.to(tag, {
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out",
+          });
         });
       });
 
-      const timelineItems = gsap.utils.toArray<HTMLElement>(".experience-item");
+      // Experience section animation
+      const expTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".experience-section",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
-      timelineItems.forEach((item) => {
+      expTl.from(".experience-title", {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      // Timeline line draw animation
+      gsap.from(".timeline-line", {
+        scaleY: 0,
+        transformOrigin: "top",
+        duration: 1.5,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: ".experience-list",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Experience items stagger
+      gsap.utils.toArray<HTMLElement>(".experience-item").forEach((item, i) => {
+        const dot = item.querySelector(".timeline-dot");
+        const content = item.querySelector(".experience-content");
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: item,
@@ -123,226 +220,227 @@ export const SkillsSection = () => {
           },
         });
 
-        tl.from(item, {
-          opacity: 0,
-          x: -80,
-          duration: 0.8,
-          ease: "power3.out",
-        })
-          .from(
-            item.querySelector(".timeline-dot"),
-            {
-              scale: 0,
-              duration: 0.4,
-              ease: "back.out(2)",
-            },
-            "-=0.4"
-          )
-          .from(
-            item.querySelectorAll(".tech-badge"),
-            {
-              opacity: 0,
-              scale: 0.5,
-              stagger: 0.05,
-              duration: 0.3,
-              ease: "back.out(1.5)",
-            },
-            "-=0.2"
-          );
+        tl.from(dot, {
+          scale: 0,
+          duration: 0.4,
+          delay: i * 0.15,
+          ease: "back.out(3)",
+        }).from(
+          content,
+          {
+            x: 30,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.out",
+          },
+          "-=0.2",
+        );
       });
 
-      gsap.to(".timeline-line", {
-        scaleY: 1,
-        duration: 1.5,
-        ease: "power2.inOut",
+      // About text reveal
+      gsap.from(".about-text", {
         scrollTrigger: {
-          trigger: ".experience-container",
-          start: "top 70%",
-          end: "bottom bottom",
+          trigger: ".about-section",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+      });
+
+      // Parallax for background text
+      gsap.to(".bg-text", {
+        yPercent: -30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
           scrub: 1,
         },
       });
     },
-    { scope: sectionRef }
+    { scope: sectionRef },
   );
-
-  const experiences = [
-    {
-      work: "Software Engineer",
-      des: "Full Stack Developer focusing on end-to-end application development with modern technologies",
-      duration: "2023 - Present",
-      tech: [
-        "Django",
-        "React Native",
-        "AWS",
-        "Docker",
-        "Node js",
-        "Spring Boot",
-      ],
-    },
-    {
-      work: "Mobile App Development",
-      des: "Created cross-platform mobile applications with seamless user experiences",
-      duration: "2022 - 2023",
-      tech: ["Flutter", "React Native", "Dart", "TypeScript", "Tailwind"],
-    },
-    {
-      work: "Full Stack Web Development",
-      des: "Mastered modern web technologies and full-stack development practices",
-      duration: "2021 - 2022",
-      tech: ["HTML", "JavaScript", "Node.js", "SQL", "MongoDB"],
-    },
-    {
-      work: "Unity Game Development",
-      des: "Built interactive games and simulations using Unity engine",
-      duration: "2020 - 2021",
-      tech: ["C#", "Unity"],
-    },
-    {
-      work: "First Line of Code",
-      des: "Started the coding journey with C programming fundamentals",
-      duration: "2020",
-      tech: ["C"],
-    },
-  ];
 
   return (
     <section
       ref={sectionRef}
-      className="skills-section container mx-auto py-20 px-4"
+      className="skills-section py-24 sm:py-32 relative overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="skills-title text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Skills & Experience
-            </span>
+      {/* Background Text */}
+      <div className="bg-text absolute -right-20 top-1/4 -rotate-90 pointer-events-none hidden xl:block">
+        <span className="text-[250px] font-bold text-foreground/[0.02] whitespace-nowrap">
+          SKILLS
+        </span>
+      </div>
+
+      {/* Section Header */}
+      <div className="skills-header px-6 sm:px-12 max-w-7xl mx-auto mb-16 sm:mb-24">
+        <div className="skills-title-line h-px bg-foreground/20 mb-8 origin-left" />
+        <div className="overflow-hidden">
+          <h2 className="skills-title-text text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none">
+            About &
+            <br />
+            <span className="text-muted-foreground">Expertise</span>
           </h2>
-          <p className="skills-subtitle text-lg text-muted-foreground max-w-2xl mx-auto">
-            A journey of continuous learning and building impactful solutions
-          </p>
         </div>
+      </div>
 
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div className="space-y-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Sparkles className="w-6 h-6 text-primary" />
+      {/* Stats Section */}
+      <div className="px-6 sm:px-12 max-w-7xl mx-auto mb-24">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+          {stats.map((stat, index) => (
+            <div key={index} className="stat-item group cursor-default">
+              <div className="relative">
+                <span className="stat-value block text-5xl sm:text-6xl md:text-7xl font-bold group-hover:text-muted-foreground transition-colors duration-300">
+                  {stat.value}
+                </span>
+                <span className="stat-label block text-sm text-muted-foreground tracking-wider uppercase mt-2">
+                  {stat.label}
+                </span>
+                <div className="absolute -bottom-2 left-0 w-0 h-px bg-foreground group-hover:w-full transition-all duration-500" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-semibold">Tech Stack</h3>
             </div>
+          ))}
+        </div>
+      </div>
 
-            <div className="flex flex-wrap gap-3">
-              {[
-                "Java",
-                "Spring Boot",
-                "Node js",
-                "Javascript",
-                "Python",
-                "Django",
-                "Git",
-                "Docker",
-                "Mysql",
-                "Postgresql",
-                "Mongodb",
-                "Pytorch",
-                "Image processing",
-                "Aws",
-                "React",
-                "Flutter",
-                "Next.js",
-                "React Native",
-                "Jira",
-                "Google Calendar",
-                "Google Meet",
-              ].map((skill) => (
-                <Button
-                  variant="outline"
-                  key={skill}
-                  className="skill-item flex items-center gap-2 px-4 py-2 rounded-full border-2 hover:border-primary hover:bg-primary/10 transition-all duration-300 backdrop-blur-sm bg-background/50 group"
+      {/* Marquee Section */}
+      <div className="relative py-8 mb-24 border-y border-foreground/10 overflow-hidden">
+        <div className="space-y-4">
+          {/* Marquee Row 1 - Left to Right */}
+          <div className="flex whitespace-nowrap overflow-hidden">
+            <div className="skills-marquee-1 flex">
+              {[...skills, ...skills].map((skill, index) => (
+                <span
+                  key={index}
+                  className="text-4xl sm:text-5xl md:text-6xl font-bold mx-6 text-foreground/5 hover:text-foreground/20 transition-colors duration-300 cursor-default"
                 >
-                  <span className="group-hover:rotate-12 transition-transform duration-300">
-                    {skillIcons[skill] || <Code2 className="w-4 h-4" />}
-                  </span>
-                  <span className="font-medium">{skill}</span>
-                </Button>
+                  {skill.name}
+                </span>
               ))}
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-8">
-              <div className="skill-item p-6 rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-primary mb-2">5+</div>
-                <div className="text-sm text-muted-foreground">
-                  Years Coding
-                </div>
-              </div>
-              <div className="skill-item p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-purple-500 mb-2">
-                  20+
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Technologies
-                </div>
+          {/* Marquee Row 2 - Right to Left */}
+          <div className="flex whitespace-nowrap overflow-hidden">
+            <div className="skills-marquee-2 flex -translate-x-1/2">
+              {[...skills, ...skills].reverse().map((skill, index) => (
+                <span
+                  key={index}
+                  className="text-4xl sm:text-5xl md:text-6xl font-bold mx-6 text-foreground/5 hover:text-foreground/20 transition-colors duration-300 cursor-default"
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="px-6 sm:px-12 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          {/* Left Column - About & Skills */}
+          <div className="space-y-16">
+            {/* About Section */}
+            <div className="about-section">
+              <h3 className="text-sm tracking-wider text-muted-foreground uppercase mb-6">
+                About Me
+              </h3>
+              <p className="about-text text-xl sm:text-2xl leading-relaxed text-muted-foreground">
+                I&apos;m a passionate software engineer who transforms complex
+                problems into elegant solutions. With expertise spanning backend
+                systems, AI/ML, and full-stack development, I create
+                applications that make a difference.
+              </p>
+            </div>
+
+            {/* Skills Grid */}
+            <div>
+              <h3 className="text-sm tracking-wider text-muted-foreground uppercase mb-6">
+                Tech Stack
+              </h3>
+              <div className="skills-grid flex flex-wrap gap-3">
+                {skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="skill-tag px-4 py-2 border border-foreground/20 text-sm cursor-default hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                  >
+                    {skill.name}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="experience-container relative">
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border overflow-hidden">
-              <div className="timeline-line absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary via-purple-500 to-pink-500 origin-top scale-y-0" />
-            </div>
+          {/* Right Column - Experience */}
+          <div className="experience-section">
+            <h3 className="experience-title text-sm tracking-wider text-muted-foreground uppercase mb-8">
+              Experience
+            </h3>
 
-            <div className="flex items-center gap-3 mb-8 ml-14">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Briefcase className="w-6 h-6 text-primary" />
+            <div className="experience-list relative pl-8">
+              {/* Timeline Line */}
+              <div className="absolute left-0 top-2 bottom-2 w-px bg-foreground/10">
+                <div className="timeline-line absolute inset-0 bg-foreground" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-semibold">Journey</h3>
+
+              <div className="space-y-12">
+                {experiences.map((exp, index) => (
+                  <div key={index} className="experience-item relative group">
+                    {/* Timeline Dot */}
+                    <div className="timeline-dot absolute -left-8 top-1 w-[7px] h-[7px] -translate-x-[3px]">
+                      <div className="w-full h-full border border-foreground bg-background group-hover:bg-foreground transition-colors duration-300" />
+                    </div>
+
+                    <div className="experience-content space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                        <h4 className="text-xl sm:text-2xl font-semibold group-hover:text-muted-foreground transition-colors duration-300">
+                          {exp.role}
+                        </h4>
+                        <span className="text-sm text-muted-foreground font-mono">
+                          {exp.duration}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-sm uppercase tracking-wider">
+                        {exp.company}
+                      </p>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {exp.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-8">
-              {experiences.map((exp, index) => (
-                <div
-                  key={index}
-                  className="experience-item relative pl-16 group"
+            {/* CTA */}
+            <div className="mt-12 pt-8 border-t border-foreground/10">
+              <a
+                href="https://linkedin.com/in/faraz-ahmed-abir-57167a1ab"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 text-sm tracking-wider hover:text-muted-foreground transition-colors"
+              >
+                <span className="link-underline">VIEW FULL EXPERIENCE</span>
+                <svg
+                  className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <div className="timeline-dot absolute left-4 top-2 z-10">
-                    <div className="relative">
-                      <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                        <div className="w-2 h-2 bg-background rounded-full" />
-                      </div>
-                      <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-                    </div>
-                  </div>
-
-                  <div className="p-6 rounded-xl bg-card border-2 border-border hover:border-primary/50 transition-all duration-300 backdrop-blur-sm hover:shadow-lg group-hover:translate-x-2">
-                    <div className="flex items-start justify-between gap-4 mb-2">
-                      <h4 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
-                        {exp.work}
-                      </h4>
-                      <Zap className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-
-                    <p className="text-muted-foreground mb-2 text-sm sm:text-base">
-                      {exp.des}
-                    </p>
-                    <p className="text-sm text-primary font-medium mb-3">
-                      {exp.duration}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {exp.tech.map((tech) => (
-                        <span
-                          key={tech}
-                          className="tech-badge rounded-full bg-primary/10 px-3 py-1 text-xs sm:text-sm flex items-center gap-1 border border-primary/20 hover:bg-primary/20 transition-colors"
-                        >
-                          {skillIcons[tech] || <Code2 className="w-3 h-3" />}
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 17L17 7M17 7H7M17 7V17"
+                  />
+                </svg>
+              </a>
             </div>
           </div>
         </div>

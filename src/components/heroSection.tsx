@@ -1,28 +1,294 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import {
-  Moon,
-  Sun,
-  Download,
-  Github,
-  Linkedin,
-  Mail,
-  ChevronDown,
-} from "lucide-react";
+import Image from "next/image";
+import { Moon, Sun, ArrowDownRight, ArrowDown } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
-gsap.registerPlugin(useGSAP, CustomEase, ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export const HeroSection = () => {
   const { theme, setTheme } = useTheme();
   const heroRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    setMounted(true);
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Asia/Dhaka",
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useGSAP(() => {
+    if (prefersReducedMotion) {
+      gsap.set(
+        [
+          ".hero-line",
+          ".char",
+          ".hero-subtitle",
+          ".hero-desc",
+          ".hero-cta",
+          ".hero-social-link",
+          ".scroll-indicator",
+          ".nav-item",
+          ".hero-badge",
+          ".hero-marquee",
+          ".hero-time",
+          ".decorative-circle",
+        ],
+        { clearProps: "all" }
+      );
+      return;
+    }
+
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    // Initial states
+    tl.set(".hero-line", { scaleX: 0 })
+      .set(".char", { yPercent: 100, opacity: 0 })
+      .set(".hero-subtitle", { yPercent: 100, opacity: 0 })
+      .set(".hero-desc", { opacity: 0, y: 30 })
+      .set(".hero-cta", { opacity: 0, y: 20 })
+      .set(".hero-social-link", { opacity: 0, y: 20 })
+      .set(".scroll-indicator", { opacity: 0 })
+      .set(".nav-item", { opacity: 0, y: -20 })
+      .set(".hero-badge", { scale: 0, opacity: 0 })
+      .set(".hero-marquee", { opacity: 0 })
+      .set(".hero-time", { opacity: 0 })
+      .set(".decorative-circle", { scale: 0 });
+
+    // Main animation sequence
+    tl.to(".hero-line", {
+      scaleX: 1,
+      duration: 1.5,
+      ease: "power2.inOut",
+    })
+      .to(
+        ".decorative-circle",
+        {
+          scale: 1,
+          duration: 1,
+          ease: "elastic.out(1, 0.5)",
+          stagger: 0.1,
+        },
+        "-=1"
+      )
+      .to(
+        ".char",
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 1.2,
+          stagger: 0.03,
+          ease: "power4.out",
+        },
+        "-=0.8"
+      )
+      .to(
+        ".hero-subtitle",
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+        },
+        "-=0.6"
+      )
+      .to(
+        ".hero-badge",
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.6,
+          ease: "back.out(2)",
+        },
+        "-=0.5"
+      )
+      .to(
+        ".hero-desc",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+        },
+        "-=0.4"
+      )
+      .to(
+        ".hero-cta",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+        },
+        "-=0.4"
+      )
+      .to(
+        ".hero-social-link",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.08,
+        },
+        "-=0.3"
+      )
+      .to(
+        ".nav-item",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.05,
+        },
+        "-=0.5"
+      )
+      .to(
+        ".hero-time",
+        {
+          opacity: 1,
+          duration: 0.5,
+        },
+        "-=0.3"
+      )
+      .to(
+        ".hero-marquee",
+        {
+          opacity: 1,
+          duration: 0.8,
+        },
+        "-=0.3"
+      )
+      .to(
+        ".scroll-indicator",
+        {
+          opacity: 1,
+          duration: 0.5,
+        },
+        "-=0.2"
+      );
+
+    // Parallax effect on scroll
+    gsap.to(".hero-content", {
+      yPercent: 50,
+      opacity: 0,
+      ease: "none",
+      scrollTrigger: {
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.5,
+      },
+    });
+
+    // Decorative circles parallax
+    gsap.to(".decorative-circle-1", {
+      y: -100,
+      rotation: 180,
+      scrollTrigger: {
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 2,
+      },
+    });
+
+    gsap.to(".decorative-circle-2", {
+      y: -150,
+      rotation: -90,
+      scrollTrigger: {
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.5,
+      },
+    });
+
+    // Marquee animation
+    gsap.to(".marquee-inner", {
+      xPercent: -50,
+      ease: "none",
+      duration: 20,
+      repeat: -1,
+    });
+
+    // Scroll indicator animation
+    gsap.to(".scroll-arrow", {
+      y: 8,
+      duration: 1,
+      repeat: -1,
+      yoyo: true,
+      ease: "power1.inOut",
+    });
+
+    // Magnetic effect on buttons (with cleanup)
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLElement>(".magnetic-btn")
+    );
+
+    const cleanups: Array<() => void> = [];
+
+    buttons.forEach((btn) => {
+      const onMove = (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(btn, {
+          x: x * 0.3,
+          y: y * 0.3,
+          duration: 0.25,
+          ease: "power2.out",
+        });
+      };
+
+      const onLeave = () => {
+        gsap.to(btn, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.5)",
+        });
+      };
+
+      btn.addEventListener("mousemove", onMove);
+      btn.addEventListener("mouseleave", onLeave);
+      cleanups.push(() => {
+        btn.removeEventListener("mousemove", onMove);
+        btn.removeEventListener("mouseleave", onLeave);
+      });
+    });
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  }, { dependencies: [prefersReducedMotion] });
+
+  // Split text into characters
+  const splitText = (text: string) => {
+    return text.split("").map((char, i) => (
+      <span key={i} className="char inline-block overflow-hidden">
+        <span className="inline-block">{char === " " ? "\u00A0" : char}</span>
+      </span>
+    ));
+  };
 
   const handleDownload = () => {
     const resumePath = `${
@@ -31,311 +297,229 @@ export const HeroSection = () => {
     window.open(resumePath, "_blank");
   };
 
-  useGSAP(() => {
-    CustomEase.create(
-      "heroEase",
-      "M0,0 C0.14,0 0.234,0.438 0.264,0.561 0.305,0.728 0.4,1.172 0.55,1.06 0.694,0.952 0.728,0.665 0.818,0.665 0.906,0.665 1,1 1,1"
-    );
-
-    const tl = gsap.timeline({ defaults: { ease: "heroEase" } });
-
-    // Staggered entrance animations
-    tl.from(".hero-badge", {
-      y: 30,
-      opacity: 0,
-      scale: 0.8,
-      duration: 0.8,
-      ease: "back.out(1.7)",
-    })
-      .from(
-        ".hero-name",
-        {
-          y: 100,
-          opacity: 0,
-          duration: 1.2,
-          stagger: 0.05,
-        },
-        "-=0.4"
-      )
-      .from(
-        ".hero-role",
-        {
-          y: 80,
-          opacity: 0,
-          duration: 1,
-          clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
-        },
-        "-=0.6"
-      )
-      .from(
-        ".hero-desc",
-        {
-          y: 60,
-          opacity: 0,
-          duration: 0.8,
-        },
-        "-=0.4"
-      )
-      .from(
-        ".hero-buttons",
-        {
-          y: 40,
-          opacity: 0,
-          duration: 0.8,
-        },
-        "-=0.3"
-      )
-      .from(
-        ".hero-social",
-        {
-          y: 20,
-          opacity: 0,
-          stagger: 0.1,
-          duration: 0.6,
-        },
-        "-=0.4"
-      )
-      .from(
-        ".scroll-indicator",
-        {
-          opacity: 0,
-          y: -20,
-          duration: 0.6,
-        },
-        "-=0.2"
-      );
-
-    // Floating animation for badge
-    gsap.to(".hero-badge", {
-      y: -10,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-
-    // Parallax effect on scroll
-    gsap.to(".hero-name", {
-      y: -50,
-      opacity: 0.5,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-
-    gsap.to(".hero-role, .hero-desc", {
-      y: -30,
-      opacity: 0.3,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-
-    // Scroll indicator animation
-    gsap.to(".scroll-indicator", {
-      y: 10,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-  });
-
-  // Animated gradient background
-  useEffect(() => {
-    if (!particlesRef.current) return;
-
-    const colors =
-      theme === "dark"
-        ? ["#3b82f6", "#8b5cf6", "#ec4899"]
-        : ["#60a5fa", "#a78bfa", "#f472b6"];
-
-    for (let i = 0; i < 20; i++) {
-      const particle = document.createElement("div");
-      particle.className = "particle";
-
-      const size = Math.random() * 300 + 100;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-
-      gsap.set(particle, {
-        width: size,
-        height: size,
-        background: `radial-gradient(circle, ${color}40 0%, transparent 70%)`,
-        position: "absolute",
-        borderRadius: "50%",
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        filter: "blur(60px)",
-        pointerEvents: "none",
-      });
-
-      particlesRef.current.appendChild(particle);
-
-      gsap.to(particle, {
-        x: `random(-200, 200)`,
-        y: `random(-200, 200)`,
-        duration: `random(15, 25)`,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-    }
-  }, [theme]);
-
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen w-full flex flex-col overflow-hidden"
     >
-      {/* Animated Background */}
-      <div ref={particlesRef} className="absolute inset-0 -z-10" />
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 grid-pattern opacity-30 -z-10" />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/50 to-background/80 backdrop-blur-3xl -z-10" />
+      {/* Decorative Circles */}
+      <div className="decorative-circle decorative-circle-1 absolute top-20 right-[20%] w-32 h-32 border border-foreground/10 rounded-full -z-10 hidden lg:block" />
+      <div className="decorative-circle decorative-circle-2 absolute bottom-40 left-[10%] w-48 h-48 border border-foreground/5 rounded-full -z-10 hidden lg:block" />
+      <div className="decorative-circle absolute top-1/2 right-[5%] w-4 h-4 bg-foreground/20 rounded-full -z-10 hidden lg:block" />
 
-      {/* Theme Toggle */}
-      <div className="fixed right-4 sm:right-6 top-4 sm:top-6 z-50">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="theme-toggle rounded-full shadow-lg hover:scale-110 transition-all duration-300 border-2 bg-background/80 backdrop-blur-sm"
-        >
-          {theme === "dark" ? (
-            <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
-          ) : (
-            <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
+      {/* Top Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 sm:px-12 py-6 flex justify-between items-center mix-blend-difference">
+        <div className="nav-item">
+          <span className="text-sm font-medium tracking-wider text-white">
+            FARAZ©
+          </span>
+        </div>
+        <div className="flex items-center gap-8">
+          <div className="hidden sm:flex items-center gap-8">
+            <a href="#projects" className="nav-item link-underline text-sm text-white tracking-wide">
+              Work
+            </a>
+            <a href="#skills" className="nav-item link-underline text-sm text-white tracking-wide">
+              About
+            </a>
+            <a href="#contact" className="nav-item link-underline text-sm text-white tracking-wide">
+              Contact
+            </a>
+          </div>
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="nav-item p-2 hover:opacity-60 transition-opacity text-white"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </button>
           )}
-        </Button>
-      </div>
+        </div>
+      </nav>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-20 sm:py-0">
-        <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 max-w-4xl mx-auto">
+      <div className="hero-content flex-1 flex items-center justify-center px-6 sm:px-12 pt-24">
+        <div className="w-full max-w-7xl mx-auto">
+          {/* Decorative Line */}
+          <div className="hero-line h-px bg-foreground/20 mb-12 origin-left" />
+
           {/* Badge */}
-          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-sm font-medium text-primary">
-              Available for work
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 border border-foreground/20 mb-8">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-xs tracking-wider uppercase text-muted-foreground">
+              Available for projects
             </span>
           </div>
 
-          {/* Name with gradient */}
-          <h1 className="hero-name text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
-              Faraz Ahmed Abir
+          {/* Main Title */}
+          <div className="space-y-4 sm:space-y-6">
+            <div className="overflow-hidden">
+              <p className="hero-subtitle text-sm sm:text-base tracking-[0.3em] uppercase text-muted-foreground mb-4">
+                Software Engineer & Problem Solver
+              </p>
+            </div>
+
+            <h1
+              ref={nameRef}
+              className="text-[12vw] sm:text-[10vw] md:text-[8vw] font-bold leading-[0.9] tracking-tight"
+            >
+              <div className="overflow-hidden whitespace-nowrap">
+                {splitText("Faraz Ahmed")}
+              </div>
+              <div className="overflow-hidden whitespace-nowrap">
+                {splitText("Abir")}
+              </div>
+            </h1>
+
+            <div className="overflow-hidden pt-4">
+              <p className="hero-subtitle text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-xl">
+                Backend • AI/ML • Full Stack
+              </p>
+            </div>
+          </div>
+
+          {/* Profile + Description & CTA */}
+          <div className="mt-12 sm:mt-16 grid sm:grid-cols-2 gap-8 sm:gap-16 items-start">
+            {/* Profile Photo */}
+            <div className="hero-profile hero-desc flex sm:hidden justify-center -mt-2">
+              <div className="relative w-28 h-28 rounded-full overflow-hidden border border-foreground/15 shadow-lg">
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || "/farazahmedabir"}/farazahmedabir.jpeg`}
+                  alt="Faraz Ahmed Abir"
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+            <div className="hero-desc">
+              {/* Desktop/Tablet photo */}
+              <div className="hidden sm:flex mb-6">
+                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-foreground/15 shadow-lg">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH || "/farazahmedabir"}/farazahmedabir.jpeg`}
+                    alt="Faraz Ahmed Abir"
+                    fill
+                    sizes="(min-width: 768px) 112px, 96px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              </div>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-md">
+                Building scalable applications that solve real-world problems.
+                Specializing in backend architecture, AI/ML solutions, and creating
+                seamless user experiences. Currently focused on EdTech innovation.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:items-end gap-6">
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={handleDownload}
+                  className="magnetic-btn hero-cta group relative px-8 py-6 bg-foreground text-background hover:bg-foreground/90 rounded-none text-sm tracking-wider"
+                >
+                  <span className="flex items-center gap-2">
+                    RESUME
+                    <ArrowDownRight className="h-4 w-4 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform" />
+                  </span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="magnetic-btn hero-cta px-8 py-6 rounded-none text-sm tracking-wider border-foreground/20 hover:bg-foreground hover:text-background transition-all"
+                  onClick={() => {
+                    document
+                      .querySelector("#contact")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  LET&apos;S TALK
+                </Button>
+              </div>
+
+              {/* Social Links */}
+              <div className="flex gap-6 pt-4">
+                <a
+                  href="https://github.com/farazabir"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hero-social-link link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Github
+                </a>
+                <a
+                  href="https://linkedin.com/in/faraz-ahmed-abir-57167a1ab"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hero-social-link link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href="mailto:farazabir50@gmail.com"
+                  className="hero-social-link link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Email
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative Line */}
+          <div className="hero-line h-px bg-foreground/20 mt-12 origin-right" />
+        </div>
+      </div>
+
+      {/* Marquee */}
+      <div className="hero-marquee absolute bottom-32 left-0 right-0 overflow-hidden py-4 border-y border-foreground/5">
+        <div className="marquee-inner flex whitespace-nowrap">
+          {[...Array(4)].map((_, i) => (
+            <span key={i} className="text-[10vw] sm:text-[8vw] font-bold text-foreground/[0.03] mx-4">
+              DEVELOPER • ENGINEER • CREATOR • INNOVATOR •
             </span>
-          </h1>
-
-          {/* Role */}
-          <div className="hero-role relative">
-            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
-              Software Engineer <span className="text-primary">@</span> Drag Me
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground/80 mt-2">
-              Backend • AI/ML • Full Stack
-            </p>
-          </div>
-
-          {/* Description */}
-          <p className="hero-desc text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Building scalable web and mobile applications that solve real-world
-            problems. Currently developing QuizNest, an AI-powered EdTech
-            platform for exam preparation. Leveraging AI and machine learning to
-            create impactful SaaS solutions with a focus on efficiency and
-            innovation.{" "}
-            <span className="text-primary font-semibold">efficiency</span> and
-            <span className="text-primary font-semibold"> innovation</span>.
-          </p>
-
-          {/* Buttons */}
-          <div className="hero-buttons flex flex-col sm:flex-row gap-4 pt-4">
-            <Button
-              onClick={handleDownload}
-              size="lg"
-              className="group relative overflow-hidden rounded-full px-8 py-6 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <Download className="h-5 w-5 group-hover:animate-bounce" />
-                Download Resume
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Button>
-
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold border-2 hover:bg-primary/10 transition-all duration-300"
-              onClick={() => {
-                document
-                  .querySelector(".contact-section")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Let&apos;s Talk
-            </Button>
-          </div>
-
-          {/* Social Links */}
-          <div className="flex gap-4 pt-4">
-            <a
-              href="https://github.com/farazabir"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-social group p-3 rounded-full bg-muted hover:bg-primary transition-all duration-300 hover:scale-110"
-            >
-              <Github className="h-5 w-5 group-hover:text-primary-foreground transition-colors" />
-            </a>
-            <a
-              href="https://linkedin.com/in/faraz-ahmed-abir-57167a1ab"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-social group p-3 rounded-full bg-muted hover:bg-primary transition-all duration-300 hover:scale-110"
-            >
-              <Linkedin className="h-5 w-5 group-hover:text-primary-foreground transition-colors" />
-            </a>
-            <a
-              href="mailto:farazabir50@gmail.com"
-              className="hero-social group p-3 rounded-full bg-muted hover:bg-primary transition-all duration-300 hover:scale-110"
-            >
-              <Mail className="h-5 w-5 group-hover:text-primary-foreground transition-colors" />
-            </a>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Scroll Indicator */}
       <div
-        className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+        className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-10"
         onClick={() =>
           window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
         }
       >
-        <span className="text-sm text-muted-foreground">Scroll to explore</span>
-        <ChevronDown className="h-6 w-6 text-primary" />
+        <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
+          Scroll
+        </span>
+        <div className="scroll-arrow w-6 h-10 border border-foreground/30 rounded-full flex items-start justify-center pt-2">
+          <ArrowDown className="h-3 w-3 text-foreground/50" />
+        </div>
       </div>
 
-      <style jsx>{`
-        @keyframes gradient {
-          0%,
-          100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
+      {/* Bottom Status */}
+      <div className="absolute bottom-8 left-6 sm:left-12 hidden sm:flex items-center gap-3">
+        <div className="w-2 h-2 rounded-full bg-foreground animate-pulse" />
+        <span className="text-xs tracking-wider text-muted-foreground uppercase">
+          Based in Bangladesh
+        </span>
+      </div>
+
+      {/* Time */}
+      <div className="hero-time absolute bottom-8 right-6 sm:right-12 hidden sm:block">
+        <span className="text-xs tracking-wider text-muted-foreground font-mono">
+          {currentTime} GMT+6
+        </span>
+      </div>
     </section>
   );
 };

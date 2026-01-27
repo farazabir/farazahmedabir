@@ -1,107 +1,84 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FaGithub, FaLinkedin, FaRegEnvelope } from "react-icons/fa";
-import { Heart, ArrowUp } from "lucide-react";
+import { ArrowUp, Github, Linkedin, Mail } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", href: "#home" },
+    { name: "Work", href: "#projects" },
+    { name: "About", href: "#skills" },
+    { name: "Contact", href: "#contact" },
+  ];
+
   const socialLinks = [
-    {
-      name: "GitHub",
-      url: "https://github.com/farazabir",
-      icon: <FaGithub className="h-6 w-6" />,
-      color: "hover:text-purple-500",
-    },
-    {
-      name: "LinkedIn",
-      url: "https://linkedin.com/in/faraz-ahmed-abir-57167a1ab",
-      icon: <FaLinkedin className="h-6 w-6" />,
-      color: "hover:text-blue-500",
-    },
-    {
-      name: "Email",
-      url: "mailto:farazabir50@gmail.com",
-      icon: <FaRegEnvelope className="h-6 w-6" />,
-      color: "hover:text-pink-500",
-    },
+    { name: "Github", url: "https://github.com/farazabir", icon: Github },
+    { name: "LinkedIn", url: "https://linkedin.com/in/faraz-ahmed-abir-57167a1ab", icon: Linkedin },
+    { name: "Email", url: "mailto:farazabir50@gmail.com", icon: Mail },
   ];
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
+      if (!mounted || prefersReducedMotion) return;
+
+      // Footer reveal animation
+      gsap.from(".footer-content", {
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 95%",
+          toggleActions: "play none none reverse",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      // Stagger links
+      gsap.from(".footer-link", {
         scrollTrigger: {
           trigger: footerRef.current,
           start: "top 90%",
           toggleActions: "play none none reverse",
         },
-      });
-
-      tl.from(".footer-content", {
+        y: 15,
         opacity: 0,
-        y: 40,
-        duration: 0.8,
-        ease: "power3.out",
-      })
-        .from(
-          ".social-link",
-          {
-            opacity: 0,
-            y: 20,
-            scale: 0.8,
-            stagger: 0.1,
-            duration: 0.5,
-            ease: "back.out(1.7)",
-          },
-          "-=0.4"
-        )
-        .from(
-          ".footer-text",
-          {
-            opacity: 0,
-            y: 20,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.3"
-        );
-
-      // Hover animations for social links
-      document.querySelectorAll(".social-link").forEach((link) => {
-        link.addEventListener("mouseenter", () => {
-          gsap.to(link, {
-            y: -8,
-            scale: 1.2,
-            duration: 0.3,
-            ease: "back.out(1.7)",
-          });
-        });
-
-        link.addEventListener("mouseleave", () => {
-          gsap.to(link, {
-            y: 0,
-            scale: 1,
-            duration: 0.3,
-            ease: "power2.out",
-          });
-        });
+        stagger: 0.05,
+        duration: 0.5,
+        ease: "power2.out",
+        delay: 0.2,
       });
 
-      // Animate heart icon
-      gsap.to(".heart-icon", {
-        scale: 1.2,
-        duration: 0.6,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut",
+      // Social icons animation
+      gsap.from(".social-icon", {
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 90%",
+          toggleActions: "play none none reverse",
+        },
+        scale: 0,
+        opacity: 0,
+        stagger: 0.08,
+        duration: 0.4,
+        ease: "back.out(2)",
+        delay: 0.3,
       });
     },
-    { scope: footerRef }
+    { scope: footerRef, dependencies: [mounted, prefersReducedMotion] }
   );
 
   const scrollToTop = () => {
@@ -111,98 +88,114 @@ export default function Footer() {
     });
   };
 
+  const currentYear = mounted ? new Date().getFullYear() : 2024;
+
   return (
     <footer
       ref={footerRef}
-      className="relative border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden"
+      className="relative border-t border-border bg-background"
     >
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 -z-10" />
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        />
-      </div>
-
-      <div className="container max-w-7xl mx-auto px-4 py-12 sm:py-16">
-        <div className="footer-content space-y-8">
-          {/* Navigation Links */}
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
+      {/* Main Footer Content */}
+      <div className="footer-content px-6 sm:px-12 py-12 sm:py-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Top Section - CTA */}
+          <div className="text-center mb-12 sm:mb-16">
+            <p className="text-sm text-muted-foreground uppercase tracking-widest mb-4">
+              Have a project in mind?
+            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
+              Let&apos;s work together
+            </h2>
             <a
-              href="#home"
-              className="text-muted-foreground hover:text-primary transition-colors duration-300 hover:underline underline-offset-4"
+              href="mailto:farazabir50@gmail.com"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-colors text-sm tracking-wider"
             >
-              Home
+              GET IN TOUCH
+              <Mail className="w-4 h-4" />
             </a>
-            <a
-              href="#projects"
-              className="text-muted-foreground hover:text-primary transition-colors duration-300 hover:underline underline-offset-4"
-            >
-              Projects
-            </a>
-            <a
-              href="#skills"
-              className="text-muted-foreground hover:text-primary transition-colors duration-300 hover:underline underline-offset-4"
-            >
-              Skills
-            </a>
-            <a
-              href="#contact"
-              className="text-muted-foreground hover:text-primary transition-colors duration-300 hover:underline underline-offset-4"
-            >
-              Contact
-            </a>
-          </div>
-
-          {/* Social Links */}
-          <div className="flex justify-center space-x-6">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                className={`social-link p-4 rounded-full bg-muted/50 backdrop-blur-sm border border-border ${link.color} transition-colors duration-300`}
-                target={link.url.startsWith("http") ? "_blank" : "_self"}
-                rel={link.url.startsWith("http") ? "noopener noreferrer" : ""}
-                aria-label={link.name}
-              >
-                {link.icon}
-              </a>
-            ))}
           </div>
 
           {/* Divider */}
-          <div className="flex items-center justify-center">
-            <div className="h-px w-32 bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="h-px bg-border mb-12" />
+
+          {/* Middle Section - Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 mb-12">
+            {/* Brand */}
+            <div className="col-span-2">
+              <span className="text-2xl font-bold tracking-tight">FARAZ©</span>
+              <p className="text-sm text-muted-foreground mt-3 max-w-xs leading-relaxed">
+                Software Engineer crafting digital experiences with code and creativity.
+              </p>
+              
+              {/* Social Icons */}
+              <div className="flex gap-3 mt-5">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.url}
+                    target={link.url.startsWith("http") ? "_blank" : "_self"}
+                    rel={link.url.startsWith("http") ? "noopener noreferrer" : ""}
+                    className="social-icon w-10 h-10 border border-border flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                    aria-label={link.name}
+                  >
+                    <link.icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div>
+              <h4 className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
+                Links
+              </h4>
+              <nav className="flex flex-col gap-2">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="footer-link text-sm hover:text-muted-foreground transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* Status */}
+            <div>
+              <h4 className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
+                Status
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-sm">Available</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Mymensingh, BD
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Copyright */}
-          <div className="footer-text text-center space-y-3">
-            <p className="text-sm text-muted-foreground font-medium flex items-center justify-center gap-2">
-              Made with{" "}
-              <Heart className="heart-icon h-4 w-4 text-red-500 fill-red-500" />{" "}
-              by
-              <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent font-bold">
-                Faraz Ahmed Abir
-              </span>
-            </p>
-            <p className="text-xs text-muted-foreground/70">
-              © {new Date().getFullYear()} All rights reserved
-            </p>
-          </div>
+          {/* Divider */}
+          <div className="h-px bg-border mb-6" />
 
-          {/* Back to Top Button */}
-          <div className="flex justify-center pt-4">
+          {/* Bottom Section */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-muted-foreground text-center sm:text-left">
+              © {currentYear} Faraz Ahmed Abir. All rights reserved.
+            </p>
+
+            {/* Back to Top */}
             <button
               onClick={scrollToTop}
-              className="group flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all duration-300 border border-primary/20 hover:border-primary hover:shadow-lg hover:shadow-primary/20"
+              className="group flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Scroll to top"
             >
-              <span className="text-sm font-medium">Back to Top</span>
-              <ArrowUp className="h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
+              <span>Back to top</span>
+              <ArrowUp className="h-3 w-3 group-hover:-translate-y-1 transition-transform" />
             </button>
           </div>
         </div>
