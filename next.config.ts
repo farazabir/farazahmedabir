@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
-  basePath: "/farazahmedabir",
+  // basePath removed for GitHub Pages user site (farazabir.github.io)
   images: {
     unoptimized: true,
     remotePatterns: [
