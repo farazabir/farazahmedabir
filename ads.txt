@@ -1,9 +1,1 @@
-# ads.txt for Google Ads
-# Replace the publisher ID below with your actual Google Ads publisher ID
-# Format: google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
-
-# Example entry (replace with your actual publisher ID):
-# google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0
-
-# For other ad networks, add additional lines following the same format:
-# <DOMAIN>, <PUBLISHER_ID>, <RELATIONSHIP>, <CERTIFICATION_AUTHORITY_ID>
+google.com, pub-8209104708856523, DIRECT, f08c47fec0942fa0
