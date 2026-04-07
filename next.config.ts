@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "github.com",
       },
+      {
+        protocol: "https",
+        hostname: "play-lh.googleusercontent.com",
+      },
     ],
   },
 };

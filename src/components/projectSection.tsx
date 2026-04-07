@@ -21,10 +21,110 @@ interface Project {
   featured?: boolean;
 }
 
-const FIVERR_PORTFOLIO_LINK =
-  "https://www.fiverr.com/users/farazabir/portfolio/Njk3NTAyNzM5ODM5MTYwMDAxNTRkMzQ0";
-
 const projects: Project[] = [
+  // ── Google Play Store Apps ──────────────────────────────────────────────
+  {
+    title: "Monvy – Personal Finance",
+    image:
+      "https://play-lh.googleusercontent.com/o_4Vo-JTgOUj0rrl8RVNirKynby5pn_S6RIagpi6ys2dWWCu51poxb43dbfn4DqDBgGTc030FP2xUbG2PqbI=w600-h300-pc0xffffff-pd",
+    description:
+      "Track expenses, budgets & savings goals — your money, all in one place.",
+    techused: "Kotlin, Jetpack Compose, Android, Room, Material 3",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.monvy",
+    category: "Android",
+    featured: true,
+  },
+  {
+    title: "Meduzo – Medicine Reminder",
+    image:
+      "https://play-lh.googleusercontent.com/TXxsJ2pKeqtyZaCi7I9paAMYh2hdpEgZu2VgW3K0rSH6rqgH46uq8FTEotUmDFPkJJJsZ9ZTDEz-CgW3w8saQw=w600-h300-pc0xffffff-pd",
+    description:
+      "Track medicines, set reminders & log doses — with drug info lookup built in.",
+    techused: "Kotlin, Jetpack Compose, Android, Room, WorkManager",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.meduzo",
+    category: "HealthTech",
+  },
+  {
+    title: "DayNest: Habit & Task Planner",
+    image:
+      "https://play-lh.googleusercontent.com/eFCs4UBp-uyXJMadDLo99AoDhDFieLlTQKbN3g_ATEyckvA9yYdYcBvGwf6JttH0eUjOFp9zyq7mV_yyI4lP=w600-h300-pc0xffffff-pd",
+    description:
+      "Cozy daily planner for tasks, habits & routines. Your cute cat companion keeps you on track.",
+    techused: "Kotlin, Jetpack Compose, Android, Room, Material 3",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.daynest",
+    category: "Productivity",
+  },
+  {
+    title: "SpeedTrack – GPS Speedometer",
+    image:
+      "https://play-lh.googleusercontent.com/9X1bPzTIQQgvmiSEZA8r2ajgW_X9a1Ef_IOaAcn77LpBU9zUJerE81pqAojDAagaflx-ajuOSV-KZTdiRD2F=w600-h300-pc0xffffff-pd",
+    description:
+      "GPS speedometer, trip recorder & speed alert. Free, offline, no subscription required.",
+    techused: "Kotlin, Jetpack Compose, Android, GPS, Maps SDK",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.speedtrack",
+    category: "Navigation",
+  },
+  {
+    title: "Studara – AI Focus Study Timer",
+    image:
+      "https://play-lh.googleusercontent.com/hZ86puUoyxRJtj97eIF4dCwdqBfmozmJ8u3NYA1NRinSyH2uQoaJPrmrFfmeYQjjYO7HgEoX0_Ukx0q2aWnc=w600-h300-pc0xffffff-pd",
+    description:
+      "AI focus tracker with eye monitoring, session reports & book scanner for students.",
+    techused: "Kotlin, Jetpack Compose, Android, ML Kit, CameraX",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.studara",
+    category: "AI + Education",
+  },
+  {
+    title: "One Year Journal",
+    image:
+      "https://play-lh.googleusercontent.com/L2xioeXvEJpqmznoW0ry5s8cqlE07EXZSNaSpHqlBXIHpbBxIQaAbNZdYrMSQS21rTJ6Dgizb7jk4sMv5bwO=w600-h300-pc0xffffff-pd",
+    description:
+      "Write daily memories and reflect on your life for one full year.",
+    techused: "Kotlin, Jetpack Compose, Android, Room",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.oneyearjournal",
+    category: "Lifestyle",
+  },
+  {
+    title: "Nonet AI – Offline AI Chat",
+    image:
+      "https://play-lh.googleusercontent.com/LxtOhmwhtuhwS_pxX2ur36zc6cFfDXZoXDPuGujT6cow1xqDoQPxivNTWYsINKoEEAGRSly1TwDQz8MaJ9pX=w600-h300-pc0xffffff-pd",
+    description:
+      "Offline AI chatbot with document scanner. Private AI assistant that works with no internet.",
+    techused: "Kotlin, Jetpack Compose, Android, On-device LLM, ML Kit",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.nonetaichat",
+    category: "AI",
+  },
+  {
+    title: "Reel Habit Tracker",
+    image:
+      "https://play-lh.googleusercontent.com/1bsPgsSZ2EdomANhNSFhIzZajxU7wBePmVKmiHUcZgRxJFg_E8q7m6WYmrpyuRbUtSigQgEXgAwxQ2y5iOWH=w600-h300-pc0xffffff-pd",
+    description:
+      "Block Reels & Shorts, track usage, set limits, and break scrolling habits for good.",
+    techused: "Kotlin, Jetpack Compose, Android, Accessibility API",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.reelshabittracker",
+    category: "Productivity",
+  },
+  {
+    title: "Dopago: ADHD Planner & Noter",
+    image:
+      "https://play-lh.googleusercontent.com/rCVvmjKzQ34mqrFdRG59nvMtLkpChOTdUy9kM0WZwPoZVBUsX7ehr7-nnTth-68PFoz7AQUqrffcIciWYzfnoB0=w600-h300-pc0xffffff-pd",
+    description:
+      "Organize tasks, build habits, track mood, and boost focus — designed to be ADHD-friendly.",
+    techused: "Kotlin, Jetpack Compose, Android, Room, Material 3",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.dopago",
+    category: "HealthTech",
+  },
+  {
+    title: "BitBakery: Sweet Matches",
+    image:
+      "https://play-lh.googleusercontent.com/tUT5LDnEzR8ZXm_x9kJP9erVTahYXKn81GyUdHQm8PiT2Xjp-arxfIlgMh1X8MimRjsBKdB2NQSb1mAx0tYj3w=w600-h300-pc0xffffff-pd",
+    description:
+      "Match sweet treats in a cozy pixel bakery match-3 puzzle adventure.",
+    techused: "Kotlin, Jetpack Compose, Android, Game Logic",
+    link: "https://play.google.com/store/apps/details?id=com.farazinc.bitbakery",
+    category: "Game",
+  },
+  // ── Other Projects ──────────────────────────────────────────────────────
   {
     title: "OpenFlix",
     image: "https://raw.githubusercontent.com/farazabir/openfilx/main/s4.jpg",
@@ -33,7 +133,6 @@ const projects: Project[] = [
     techused: "Kotlin, Jetpack Compose, OkHttp, Web Scraping, Android",
     link: "https://github.com/farazabir/openfilx",
     category: "Android",
-    featured: true,
   },
   {
     title: "AgriBuddy",
@@ -41,9 +140,8 @@ const projects: Project[] = [
       "https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/26fa3be0d479edffed32bca818e0c0a2-1769275872426/agribuddy%20(1024%20x%20768%20px).png",
     description:
       "AI-powered farm assistant with pest/disease detection, yield prediction, fertilizer recommendations, weather alerts, and market insights—optimized for low-bandwidth use.",
-    techused:
-      "Flutter, Django, DRF, PostgreSQL, TensorFlow, PyTorch, AWS S3, AWS Lambda",
-    link: FIVERR_PORTFOLIO_LINK,
+    techused: "Flutter, Django, DRF, PostgreSQL, TensorFlow, PyTorch, AWS S3, AWS Lambda",
+    link: "https://www.fiverr.com/users/farazabir/portfolio/Njk3NTAyNzM5ODM5MTYwMDAxNTRkMzQ0",
     category: "AI + Mobile",
   },
   {
@@ -53,7 +151,7 @@ const projects: Project[] = [
     description:
       "Minimal Android launcher designed to reduce screen time and visual noise with a dark-first, battery-efficient UI.",
     techused: "Kotlin, Jetpack Compose, Clean Architecture",
-    link: FIVERR_PORTFOLIO_LINK,
+    link: "https://www.fiverr.com/users/farazabir/portfolio/Njk3NTAyNzM5ODM5MTYwMDAxNTRkMzQ0",
     category: "Android",
   },
   {
@@ -63,7 +161,7 @@ const projects: Project[] = [
     description:
       "AI skincare platform for analysis, tracking, and personalized routines with privacy-first design and AR-ready foundations.",
     techused: "Flutter, Python, Computer Vision, CNNs, ARCore/ARKit",
-    link: FIVERR_PORTFOLIO_LINK,
+    link: "https://www.fiverr.com/users/farazabir/portfolio/Njk3NTAyNzM5ODM5MTYwMDAxNTRkMzQ0",
     category: "AI + AR",
   },
   {
@@ -73,7 +171,7 @@ const projects: Project[] = [
     description:
       "AI mental health companion for mood/stress analysis (face/voice/text) with personalized interventions and wearable integration.",
     techused: "Flutter, Python, Spring Boot, Wearables, ML",
-    link: FIVERR_PORTFOLIO_LINK,
+    link: "https://www.fiverr.com/users/farazabir/portfolio/Njk3NTAyNzM5ODM5MTYwMDAxNTRkMzQ0",
     category: "HealthTech AI",
   },
   {
@@ -140,6 +238,7 @@ function getLinkIcon(link: string) {
   if (link.includes("github.com")) return <Github className="h-4 w-4" />;
   if (link.includes("youtube.com")) return <Play className="h-4 w-4" />;
   if (link.includes("apps.apple.com")) return <Smartphone className="h-4 w-4" />;
+  if (link.includes("play.google.com")) return <Smartphone className="h-4 w-4" />;
   return <Globe className="h-4 w-4" />;
 }
 
