@@ -291,9 +291,8 @@ export const HeroSection = () => {
   };
 
   const handleDownload = () => {
-    const resumePath = `${
-      process.env.NEXT_PUBLIC_BASE_PATH || "/farazahmedabir"
-    }/resume.pdf`;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    const resumePath = `${basePath}/resume.pdf`;
     window.open(resumePath, "_blank");
   };
 
@@ -392,7 +391,7 @@ export const HeroSection = () => {
             <div className="hero-profile hero-desc flex sm:hidden justify-center -mt-2">
               <div className="relative w-28 h-28 rounded-full overflow-hidden border border-foreground/15 shadow-lg">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || "/farazahmedabir"}/farazahmedabir.jpeg`}
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/farazahmedabir.jpeg`}
                   alt="Faraz Ahmed Abir"
                   fill
                   sizes="112px"
@@ -406,7 +405,7 @@ export const HeroSection = () => {
               <div className="hidden sm:flex mb-6">
                 <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-foreground/15 shadow-lg">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_BASE_PATH || "/farazahmedabir"}/farazahmedabir.jpeg`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/farazahmedabir.jpeg`}
                     alt="Faraz Ahmed Abir"
                     fill
                     sizes="(min-width: 768px) 112px, 96px"
