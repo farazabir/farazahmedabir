@@ -480,7 +480,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Marquee */}
-      <div className="hero-marquee absolute bottom-32 left-0 right-0 overflow-hidden py-4 border-y border-foreground/5">
+      <div className="hero-marquee absolute bottom-32 left-0 right-0 overflow-hidden py-4 border-y border-foreground/5 -z-10 pointer-events-none">
         <div className="marquee-inner flex whitespace-nowrap">
           {[...Array(4)].map((_, i) => (
             <span key={i} className="text-[10vw] sm:text-[8vw] font-bold text-foreground/[0.03] mx-4">
